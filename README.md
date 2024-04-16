@@ -43,6 +43,7 @@ Send us the project and answer to those simple questions :
     - The update button to update users doesn't work. Change the event from onChange to onClick.
     - When we created a project, if we clicked on it, the app will crash saying "undefined is not an object (evaluating 'project.name.toString') which is normal. Delete the
     ".toString" line 73 in scene/project/view.
-- Which feature did you develop and why ? 
-- Do you have any feedback about the code / architecture of the project and what was the difficulty you encountered while doing it ? 
+- Which feature did you develop and why ?
+- i decided to develop a real time availabality status when you check for your mates in the specific component. I think real time event are always a good user experience. Nothing perfect, you'll only be qble to see it you and the other user are both connected and on the mounted specific mounted component /scene/user/list
+- Do you have any feedback about the code / architecture of the project and what was the difficulty you encountered while doing it ? Had a hard time to develop the socket server in nodejs since i usually use nestjs. Also, haven't touched react since a while, so i had to understand again how work useEffect and useState, but overall, the code is clean and pretty easy to understand.
 
