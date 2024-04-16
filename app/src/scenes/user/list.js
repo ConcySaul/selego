@@ -1,16 +1,21 @@
 import { Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useHistory } from "react-router-dom";
 import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
+import io from 'socket.io-client';
+import Cookies from 'js-cookies';
 
 const NewList = () => {
   const [users, setUsers] = useState(null);
   const [projects, setProjects] = useState([]);
   const [usersFiltered, setUsersFiltered] = useState(null);
   const [filter, setFilter] = useState({ status: "active", availability: "", search: "" });
+  const [connectedUsers, setConnectedUsers] = useState();
+  const [socket, setSocket] = useState(['jwt']);
+  const socketRef = useRef(null);
 
   useEffect(() => {
     (async () => {
@@ -19,6 +24,25 @@ const NewList = () => {
     })();
     getProjects();
   }, []);
+
+  useEffect(() => {
+    socketRef.current = io('http://localhost:3000/', {
+    query: {
+      cookie: Cookies.getItem('jwt'),
+    },
+  });
+  setSocket(socket);
+
+  socketRef.current.on("getConnectedUsers", (data) => {
+      setConnectedUsers(data);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
+
+  
 
   async function getProjects() {
     const res = await api.get("/project");
@@ -76,7 +100,7 @@ const NewList = () => {
         <div className="overflow-x-auto">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-6 gap-5 ">
             {usersFiltered.map((hit, idx) => {
-              return <UserCard key={hit._id} idx={idx} hit={hit} projects={projects} />;
+              return <UserCard key={hit._id} idx={idx} hit={hit} projects={projects} connectedUsers={connectedUsers}/>;
             })}
           </div>
         </div>
@@ -128,7 +152,7 @@ const Create = () => {
                     <div className="flex justify-between flex-wrap">
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Name</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="username" value={values.username} onChange={handleChange} />
+                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="name" value={values.username} onChange={handleChange} />
                       </div>
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Email</div>
@@ -139,7 +163,7 @@ const Create = () => {
                       {/* Password */}
                       <div className="w-full md:w-[48%] mt-2">
                         <div className="text-[14px] text-[#212325] font-medium	">Password</div>
-                        <input className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
+                        <input type="password" className="projectsInput text-[14px] font-normal text-[#212325] rounded-[10px]" name="password" value={values.password} onChange={handleChange} />
                       </div>
                     </div>
                   </div>
@@ -210,7 +234,16 @@ const FilterStatus = ({ filter, setFilter }) => {
   );
 };
 
-const UserCard = ({ hit, projects }) => {
+const UserCard = ({ hit, projects, connectedUsers}) => {
+
+
+  const isConnected = (id) => {
+    if (!connectedUsers.includes(id)) {
+      return false;
+    }
+  return true;
+}
+
   const history = useHistory();
   return (
     <div
@@ -225,7 +258,7 @@ const UserCard = ({ hit, projects }) => {
         </div>
         <div className="flex flex-col items-center z-20">
           <img src={hit.avatar} className="object-contain rounded-full w-20 h-20 " />
-          <div className={`rounded-full py-1 px-3 whitespace-nowrap ${hit.availability === "available" ? "bg-[#2EC735]" : "bg-[#8A8989]"} flex items-center gap-2 -translate-y-2`}>
+          <div className={`rounded-full py-1 px-3 whitespace-nowrap ${isConnected(hit._id) ? "bg-[#2EC735]" : "bg-[#8A8989]"} flex items-center gap-2 -translate-y-2`}>
             <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="4" cy="4" r="4" fill="white" />
             </svg>

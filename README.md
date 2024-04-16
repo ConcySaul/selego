@@ -37,7 +37,12 @@ Time to be creative, and efficient. Do what you think would be the best for your
 ## Finally
 
 Send us the project and answer to those simple questions : 
-- What bugs did you find ? How did you solve these and why ? 
+- What bugs did you find ? How did you solve these and why ?
+    - first, when we create a new user, the input has no type, which lead to display the whole password. We can fix that by simply add `type="password"` in app/src/scenes/list.js
+    - When creating a user, the provided name isn't saved. Our API waits for an object with multiple properties, and one should be named "name" with the user's name as value. Just change the value of the property in the specific input from "username" to "name".
+    - The update button to update users doesn't work. Change the event from onChange to onClick.
+    - When we created a project, if we clicked on it, the app will crash saying "undefined is not an object (evaluating 'project.name.toString') which is normal. Delete the
+    ".toString" line 73 in scene/project/view.
 - Which feature did you develop and why ? 
 - Do you have any feedback about the code / architecture of the project and what was the difficulty you encountered while doing it ? 
 

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/index.js",
+    "dev": "nodemon ./src/index.js && node ./src/sockerServer.js",
     "start": "node ./src/index.js"
   },
   "author": "SELEGO",
@@ -28,8 +28,11 @@
     "passport-jwt": "^4.0.0",
     "password-validator": "^5.1.0",
     "pg": "^8.5.1",
+    "react-cookie": "^7.1.4",
     "sequelize": "^6.5.0",
-    "sib-api-v3-sdk": "^8.0.2"
+    "sib-api-v3-sdk": "^8.0.2",
+    "socket.io": "^4.7.5",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

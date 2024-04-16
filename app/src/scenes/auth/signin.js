@@ -26,7 +26,9 @@ export default () => {
           try {
             const { user, token } = await api.post(`/user/signin`, values);
             if (token) api.setToken(token);
-            if (user) dispatch(setUser(user));
+            if (user){
+              dispatch(setUser(user));
+            }
           } catch (e) {
             console.log("e", e);
             toast.error("Wrong login", e.code);

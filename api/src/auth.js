@@ -40,7 +40,7 @@ class Auth {
       user.set({ last_login_at: Date.now() });
       await user.save();
 
-      let cookieOptions = { maxAge: COOKIE_MAX_AGE, httpOnly: true };
+      let cookieOptions = { maxAge: COOKIE_MAX_AGE, httpOnly: false };
       if (config.ENVIRONMENT === "development") {
         cookieOptions = { ...cookieOptions, secure: false, domain: "localhost", sameSite: "Lax" };
       } else {
@@ -79,6 +79,7 @@ class Auth {
 
   async logout(req, res) {
     try {
+      console.log(req);
       res.clearCookie("jwt");
       return res.status(200).send({ ok: true });
     } catch (error) {
