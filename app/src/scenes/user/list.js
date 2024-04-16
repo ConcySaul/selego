@@ -238,7 +238,7 @@ const UserCard = ({ hit, projects, connectedUsers}) => {
 
 
   const isConnected = (id) => {
-    if (!connectedUsers.includes(id)) {
+    if (!connectedUsers || !connectedUsers.includes(id)) {
       return false;
     }
   return true;
